@@ -1,11 +1,38 @@
-name: Mini Automation - XOps Message
+name: Deploy Dynamic XOps Page
 
 on:
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  say-xops-awesome:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Print XOps message
-        run: echo "XOps is awesome!"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update index.html with dynamic XOps message
+        run: |
+          NOW=$(date +"%Y-%m-%d %H:%M:%S")
+          echo "<!DOCTYPE html>
+          <html lang='en'>
+          <head>
+              <meta charset='UTF-8'>
+              <title>XOps Flash</title>
+          </head>
+          <body>
+              <h1>XOps is awesome!</h1>
+              <p>Last updated: $NOW</p>
+          </body>
+          </html>" > public/index.html
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/index.html
+          git commit -m "Update XOps message with timestamp [skip ci]" || echo "No changes to commit"
+          git push
