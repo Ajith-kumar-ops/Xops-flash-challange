@@ -1,0 +1,11 @@
+name: Mini Automation - XOps Message
+
+on:
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  say-xops-awesome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print XOps message
+        run: echo "XOps is awesome!"
